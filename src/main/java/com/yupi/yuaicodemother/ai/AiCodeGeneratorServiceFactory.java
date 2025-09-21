@@ -136,6 +136,7 @@ public class AiCodeGeneratorServiceFactory {
     }
 
     /**
+     * 代理模式
      * 创建 AI 代码生成器服务
      *
      * @return

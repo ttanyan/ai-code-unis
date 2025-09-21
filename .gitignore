@@ -6,3 +6,4 @@ application-prod.yml
 *.key
 .env
 target/
+/tmp/
