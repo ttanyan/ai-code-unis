@@ -155,4 +155,9 @@ public class AiCodeGeneratorServiceFactory {
     private String buildCacheKey(long appId, CodeGenTypeEnum codeGenType) {
         return appId + "_" + codeGenType.getValue();
     }
+
+    // 在适当的地方添加清除缓存的方法
+    public void clearCache() {
+        serviceCache.invalidateAll();
+    }
 }

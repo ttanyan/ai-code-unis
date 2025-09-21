@@ -1,5 +1,5 @@
 # 数据库初始化
-# @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+# tanlianwang
 # @from <a href="https://codefather.cn">编程导航学习圈</a>
 
 -- 创建库
