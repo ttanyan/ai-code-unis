@@ -1,4 +1,5 @@
 # 忽略本地配置文件
+application.yml
 application-local.yml
 application-prod.yml
 *.secret
