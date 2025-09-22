@@ -76,6 +76,7 @@ public class JsonMessageStreamHandler {
                 String data = aiMessage.getData();
                 // 直接拼接响应
                 chatHistoryStringBuilder.append(data);
+                //返回给前段
                 return data;
             }
             case TOOL_REQUEST -> {

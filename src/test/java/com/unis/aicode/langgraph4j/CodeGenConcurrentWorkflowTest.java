@@ -1,12 +1,18 @@
 package com.unis.aicode.langgraph4j;
 
+import com.unis.aicode.BaseTest;
 import com.unis.aicode.langgraph4j.state.WorkflowContext;
+import com.unis.aicode.monitor.MonitorContext;
+import com.unis.aicode.monitor.MonitorContextHolder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CodeGenConcurrentWorkflowTest {
+class CodeGenConcurrentWorkflowTest extends BaseTest {
+
 
     @Test
     void testConcurrentWorkflow() {
@@ -25,5 +31,15 @@ class CodeGenConcurrentWorkflowTest {
         System.out.println("生成类型: " + result.getGenerationType());
         System.out.println("生成的代码目录: " + result.getGeneratedCodeDir());
         System.out.println("收集的图片数量: " + (result.getImageList() != null ? result.getImageList().size() : 0));
+    }
+
+
+    @Test
+    void testPersonWorkflow() {
+        WorkflowContext result = new PersonOrganizationWorkflow().executeWorkflow("查看当前所有用户，然后添加一个新用户张三，最后同步数据");
+        Assertions.assertNotNull(result);
+        System.out.println("当前步骤: " + result.getCurrentStep());
+        System.out.println("增强后的提示词: " + result.getEnhancedPrompt());
+        System.out.println("用户列表数量: " + (result.getUserList() != null ? result.getUserList().size() : 0));
     }
 }
