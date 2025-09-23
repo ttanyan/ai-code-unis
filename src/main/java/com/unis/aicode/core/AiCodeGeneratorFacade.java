@@ -9,6 +9,7 @@ import com.unis.aicode.ai.model.message.AiResponseMessage;
 import com.unis.aicode.ai.model.message.ToolExecutedMessage;
 import com.unis.aicode.ai.model.message.ToolRequestMessage;
 import com.unis.aicode.constant.AppConstant;
+import com.unis.aicode.core.builder.JavaProjectBuilder;
 import com.unis.aicode.core.builder.VueProjectBuilder;
 import com.unis.aicode.core.parser.CodeParserExecutor;
 import com.unis.aicode.core.saver.CodeFileSaverExecutor;
@@ -38,6 +39,9 @@ public class AiCodeGeneratorFacade {
     @Resource
     private VueProjectBuilder vueProjectBuilder;
 
+    @Resource
+    private JavaProjectBuilder javaProjectBuilder;
+
     /**
      * 统一入口：根据类型生成并保存代码
      *
@@ -61,6 +65,11 @@ public class AiCodeGeneratorFacade {
                 MultiFileCodeResult result = aiCodeGeneratorService.generateMultiFileCode(userMessage);
                 yield CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.MULTI_FILE, appId);
             }
+            case VUE_PROJECT -> {
+                yield null;
+//                MultiFileCodeResult result = aiCodeGeneratorService.generateMultiFileCode(userMessage);
+//                yield CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.MULTI_FILE, appId);
+            }
             default -> {
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, errorMessage);
@@ -76,7 +85,7 @@ public class AiCodeGeneratorFacade {
      * @param appId           应用 ID
      * @return 保存的目录
      */
-    public Flux<String> generateAndSaveCodeStream(String userMessage, CodeGenTypeEnum codeGenTypeEnum, Long appId) {
+    public Flux<String>  generateAndSaveCodeStream(String userMessage, CodeGenTypeEnum codeGenTypeEnum, Long appId) {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "生成类型不能为空");
         }
@@ -93,7 +102,11 @@ public class AiCodeGeneratorFacade {
             }
             case VUE_PROJECT -> {
                 TokenStream tokenStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
-                yield processTokenStream(tokenStream, appId);
+                yield processTokenStream(tokenStream, appId, codeGenTypeEnum);
+            }
+            case JAVA_PROJECT -> {
+                TokenStream codeStream = aiCodeGeneratorService.generateJavaProjectCodeStream(appId,userMessage);
+                yield processTokenStream(codeStream, appId, codeGenTypeEnum);
             }
             default -> {
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
@@ -109,7 +122,7 @@ public class AiCodeGeneratorFacade {
      * @param appId       应用 ID
      * @return Flux<String> 流式响应
      */
-    private Flux<String> processTokenStream(TokenStream tokenStream, Long appId) {
+    private Flux<String> processTokenStream(TokenStream tokenStream, Long appId,CodeGenTypeEnum codeGenTypeEnum) {
         return Flux.create(sink -> {
             tokenStream.onPartialResponse((String partialResponse) -> {
                         AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
@@ -124,9 +137,18 @@ public class AiCodeGeneratorFacade {
                         sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
                     })
                     .onCompleteResponse((ChatResponse response) -> {
-                        // 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）
-                        String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/vue_project_" + appId;
-                        vueProjectBuilder.buildProject(projectPath);
+                        if(codeGenTypeEnum == CodeGenTypeEnum.VUE_PROJECT){
+                            log.info(" 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）");
+                            // 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）
+                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/ai-code-unis_" + appId;
+                            vueProjectBuilder.buildProject(projectPath);
+                        }else{
+                            //TODO 执行java项目构建 接入公司的jenkins 实现打包部署一体流程
+                            log.info(codeGenTypeEnum.getValue().toString()+"项目构建开始...");
+//                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/java_project" + appId;
+//                            javaProjectBuilder.buildProject(projectPath);
+                        }
+
                         sink.complete();
                     })
                     .onError((Throwable error) -> {

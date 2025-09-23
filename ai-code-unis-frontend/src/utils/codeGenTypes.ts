@@ -5,6 +5,7 @@ export enum CodeGenTypeEnum {
   HTML = 'html',
   MULTI_FILE = 'multi_file',
   VUE_PROJECT = 'vue_project',
+  JAVA_PROJECT = 'java_project',
 }
 
 /**
@@ -21,6 +22,10 @@ export const CODE_GEN_TYPE_CONFIG = {
   },
   [CodeGenTypeEnum.VUE_PROJECT]: {
     label: 'Vue 项目模式',
+    value: CodeGenTypeEnum.VUE_PROJECT,
+  },
+  [CodeGenTypeEnum.JAVA_PROJECT]: {
+    label: 'Java 后端项目模式',
     value: CodeGenTypeEnum.VUE_PROJECT,
   },
 } as const
