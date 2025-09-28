@@ -8,7 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MonitorContextHolder {
 
-    private static final ThreadLocal<MonitorContext> CONTEXT_HOLDER = new ThreadLocal<>();
+    private static final InheritableThreadLocal<MonitorContext> CONTEXT_HOLDER = new InheritableThreadLocal<MonitorContext>() {
+        @Override
+        protected MonitorContext childValue(MonitorContext parentValue) {
+            // 确保子线程能继承父线程的上下文值
+            return parentValue;
+        }
+        
+        @Override
+        protected MonitorContext initialValue() {
+            // 返回默认值，避免返回null
+            return null;
+        }
+    };
 
     /**
      * 设置监控上下文

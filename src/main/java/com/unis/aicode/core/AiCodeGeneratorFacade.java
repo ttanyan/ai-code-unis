@@ -140,13 +140,13 @@ public class AiCodeGeneratorFacade {
                         if(codeGenTypeEnum == CodeGenTypeEnum.VUE_PROJECT){
                             log.info(" 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）");
                             // 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）
-                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/ai-code-unis_" + appId;
+                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR +AppConstant.VUE_PROJECT_DIR  + appId;
                             vueProjectBuilder.buildProject(projectPath);
-                        }else{
-                            //TODO 执行java项目构建 接入公司的jenkins 实现打包部署一体流程
-                            log.info(codeGenTypeEnum.getValue().toString()+"项目构建开始...");
-//                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/java_project" + appId;
-//                            javaProjectBuilder.buildProject(projectPath);
+                        }
+                        if(codeGenTypeEnum == CodeGenTypeEnum.JAVA_PROJECT){
+                            log.info(" 执行 Java 项目构建（异步执行，确保预览时项目已就绪）");
+                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR +AppConstant.JAVA_PROJECT_DIR  + appId;
+                            javaProjectBuilder.buildProjectAsync(projectPath);
                         }
 
                         sink.complete();

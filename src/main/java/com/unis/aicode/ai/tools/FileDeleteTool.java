@@ -2,6 +2,7 @@ package com.unis.aicode.ai.tools;
 
 import cn.hutool.json.JSONObject;
 import com.unis.aicode.constant.AppConstant;
+import com.unis.aicode.model.enums.CodeGenTypeEnum;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolMemoryId;
@@ -25,13 +26,16 @@ public class FileDeleteTool extends BaseTool {
     public String deleteFile(
             @P("文件的相对路径")
             String relativeFilePath,
+            @P("代码生成类型，可选值：html, multi_file, vue_project, java_project")
+            String codeGenType,
             @ToolMemoryId Long appId
     ) {
         try {
             Path path = Paths.get(relativeFilePath);
             if (!path.isAbsolute()) {
-                String projectDirName = "vue_project_" + appId;
-                Path projectRoot = Paths.get(AppConstant.CODE_OUTPUT_ROOT_DIR, projectDirName);
+                // 根据代码生成类型确定项目目录名称
+                String projectDirName = getProjectDirName(codeGenType, appId);
+                Path projectRoot = Paths.get(projectDirName);
                 path = projectRoot.resolve(relativeFilePath);
             }
             if (!Files.exists(path)) {
@@ -52,6 +56,35 @@ public class FileDeleteTool extends BaseTool {
             String errorMessage = "删除文件失败: " + relativeFilePath + ", 错误: " + e.getMessage();
             log.error(errorMessage, e);
             return errorMessage;
+        }
+    }
+
+    /**
+     * 根据代码生成类型和应用ID获取项目目录名称
+     *
+     * @param codeGenType 代码生成类型
+     * @param appId       应用ID
+     * @return 项目目录名称
+     */
+    private String getProjectDirName(String codeGenType, Long appId) {
+        CodeGenTypeEnum typeEnum = CodeGenTypeEnum.getEnumByValue(codeGenType);
+        String baseDir = AppConstant.CODE_OUTPUT_ROOT_DIR;
+        
+        if (typeEnum == null) {
+            // 默认使用Vue项目目录
+            return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+        }
+        
+        switch (typeEnum) {
+            case HTML:
+            case MULTI_FILE:
+                return baseDir + "/html_" + appId;
+            case VUE_PROJECT:
+                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+            case JAVA_PROJECT:
+                return baseDir + AppConstant.JAVA_PROJECT_DIR + appId;
+            default:
+                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
         }
     }
 

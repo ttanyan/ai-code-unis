@@ -3,6 +3,7 @@ package com.unis.aicode.ai.tools;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import com.unis.aicode.constant.AppConstant;
+import com.unis.aicode.model.enums.CodeGenTypeEnum;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolMemoryId;
@@ -29,14 +30,16 @@ public class FileWriteTool extends BaseTool {
             String relativeFilePath,
             @P("要写入文件的内容")
             String content,
+            @P("代码生成类型，可选值：html, multi_file, vue_project, java_project")
+            String codeGenType,
             @ToolMemoryId Long appId
     ) {
         try {
             Path path = Paths.get(relativeFilePath);
             if (!path.isAbsolute()) {
-                // 相对路径处理，创建基于 appId 的项目目录
-                String projectDirName = "ai_code_project_" + appId;
-                Path projectRoot = Paths.get(AppConstant.CODE_OUTPUT_ROOT_DIR, projectDirName);
+                // 根据代码生成类型确定项目目录名称
+                String projectDirName = getProjectDirName(codeGenType, appId);
+                Path projectRoot = Paths.get(projectDirName);
                 path = projectRoot.resolve(relativeFilePath);
             }
             // 创建父目录（如果不存在）
@@ -55,6 +58,35 @@ public class FileWriteTool extends BaseTool {
             String errorMessage = "文件写入失败: " + relativeFilePath + ", 错误: " + e.getMessage();
             log.error(errorMessage, e);
             return errorMessage;
+        }
+    }
+
+    /**
+     * 根据代码生成类型和应用ID获取项目目录名称
+     *
+     * @param codeGenType 代码生成类型
+     * @param appId       应用ID
+     * @return 项目目录名称
+     */
+    private String getProjectDirName(String codeGenType, Long appId) {
+        CodeGenTypeEnum typeEnum = CodeGenTypeEnum.getEnumByValue(codeGenType);
+        String baseDir = AppConstant.CODE_OUTPUT_ROOT_DIR;
+        
+        if (typeEnum == null) {
+            // 默认使用Vue项目目录
+            return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+        }
+        
+        switch (typeEnum) {
+            case HTML:
+            case MULTI_FILE:
+                return baseDir + "/html_" + appId;
+            case VUE_PROJECT:
+                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+            case JAVA_PROJECT:
+                return baseDir + AppConstant.JAVA_PROJECT_DIR + appId;
+            default:
+                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
         }
     }
 

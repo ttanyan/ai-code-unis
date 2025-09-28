@@ -29,4 +29,12 @@ public interface AppConstant {
      * 应用部署域名
      */
     String CODE_DEPLOY_HOST = "http://localhost";
+
+
+    String HTML_DIR = "/html_";
+
+    String VUE_PROJECT_DIR = "/vue_project_";
+
+    String JAVA_PROJECT_DIR = "/java_project_";
+
 }

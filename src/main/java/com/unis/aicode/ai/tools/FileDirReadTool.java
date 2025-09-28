@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.unis.aicode.constant.AppConstant;
+import com.unis.aicode.model.enums.CodeGenTypeEnum;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolMemoryId;
@@ -43,13 +44,16 @@ public class FileDirReadTool extends BaseTool {
     public String readDir(
             @P("目录的相对路径，为空则读取整个项目结构")
             String relativeDirPath,
+            @P("代码生成类型，可选值：html, multi_file, vue_project, java_project")
+            String codeGenType,
             @ToolMemoryId Long appId
     ) {
         try {
             Path path = Paths.get(relativeDirPath == null ? "" : relativeDirPath);
             if (!path.isAbsolute()) {
-                String projectDirName = "vue_project_" + appId;
-                Path projectRoot = Paths.get(AppConstant.CODE_OUTPUT_ROOT_DIR, projectDirName);
+                // 根据代码生成类型确定项目目录名称
+                String projectDirName = getProjectDirName(codeGenType, appId);
+                Path projectRoot = Paths.get(projectDirName);
                 path = projectRoot.resolve(relativeDirPath == null ? "" : relativeDirPath);
             }
             File targetDir = path.toFile();
@@ -80,6 +84,35 @@ public class FileDirReadTool extends BaseTool {
             String errorMessage = "读取目录结构失败: " + relativeDirPath + ", 错误: " + e.getMessage();
             log.error(errorMessage, e);
             return errorMessage;
+        }
+    }
+
+    /**
+     * 根据代码生成类型和应用ID获取项目目录名称
+     *
+     * @param codeGenType 代码生成类型
+     * @param appId       应用ID
+     * @return 项目目录名称
+     */
+    private String getProjectDirName(String codeGenType, Long appId) {
+        CodeGenTypeEnum typeEnum = CodeGenTypeEnum.getEnumByValue(codeGenType);
+        String baseDir = AppConstant.CODE_OUTPUT_ROOT_DIR;
+        
+        if (typeEnum == null) {
+            // 默认使用Vue项目目录
+            return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+        }
+        
+        switch (typeEnum) {
+            case HTML:
+            case MULTI_FILE:
+                return baseDir + "/html_" + appId;
+            case VUE_PROJECT:
+                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+            case JAVA_PROJECT:
+                return baseDir + AppConstant.JAVA_PROJECT_DIR + appId;
+            default:
+                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
         }
     }
 
@@ -123,4 +156,4 @@ public class FileDirReadTool extends BaseTool {
         }
         return String.format("[工具调用] %s %s", getDisplayName(), relativeDirPath);
     }
-} 
+}
