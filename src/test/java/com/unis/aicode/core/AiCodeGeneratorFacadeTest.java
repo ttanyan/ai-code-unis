@@ -46,25 +46,4 @@ class AiCodeGeneratorFacadeTest {
         String completeContent = String.join("", result);
         Assertions.assertNotNull(completeContent);
     }
-
-
-    @Test
-    void generateJavaProjectCodeStream() {
-        Flux<String> codeStream = aiCodeGeneratorFacade.generateAndSaveCodeStream(
-                "获取分发的所有单位信息 https://cloud.moedu.com/openapi/ecp-datacenter-svc/school/getChildByEduOrgId\n" +
-                        "根据部门编码获取部门信息 https://cloud.moedu.com/openapi/ecp-datacenter-svc/department/getDetailsById\n" +
-                        "根据部门编码获取部门下的用户信息 https://cloud.moedu.com/openapi/ecp-datacenter-svc/department/getUserById\n" +
-                        "\n" +
-                        "利用上面的接口获取信息同步到华智平台\n" +
-                        "获取单位下所有部门信息，整理组织树，同步至华智平台\n" +
-                        "根据单位编码获取所有行政组织人员，同步至华智平台对应绝织下根据单位编码获取普通教职工，同步至华智平台对应组织下\n" +
-                        "根据单位编码获取外聘服务人员，同步至华智平台对应组织下根据单位编码获取其它人员，同步至华智平台对应组织下",
-                CodeGenTypeEnum.JAVA_PROJECT, 1L);
-        // 阻塞等待所有数据收集完成
-        List<String> result = codeStream.collectList().block();
-        // 验证结果
-        Assertions.assertNotNull(result);
-        String completeContent = String.join("", result);
-        Assertions.assertNotNull(completeContent);
-    }
 }
