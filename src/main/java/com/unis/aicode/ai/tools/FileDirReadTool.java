@@ -9,6 +9,7 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -95,22 +96,25 @@ public class FileDirReadTool extends BaseTool {
      * @return 项目目录名称
      */
     private String getProjectDirName(String codeGenType, Long appId) {
+        return getCodeGenTypePath(codeGenType, appId);
+    }
+
+    @NotNull
+    public static String getCodeGenTypePath(String codeGenType, Long appId) {
         CodeGenTypeEnum typeEnum = CodeGenTypeEnum.getEnumByValue(codeGenType);
         String baseDir = AppConstant.CODE_OUTPUT_ROOT_DIR;
-        
+
         if (typeEnum == null) {
-            // 默认使用Vue项目目录
-            return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+            throw new RuntimeException("无效的代码类型 "+ codeGenType);
         }
-        
+
         switch (typeEnum) {
             case HTML:
             case MULTI_FILE:
-                return baseDir + "/html_" + appId;
-            case VUE_PROJECT:
-                return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
+                return baseDir + AppConstant.HTML_DIR + appId;
             case JAVA_PROJECT:
                 return baseDir + AppConstant.JAVA_PROJECT_DIR + appId;
+            case VUE_PROJECT:
             default:
                 return baseDir + AppConstant.VUE_PROJECT_DIR + appId;
         }
