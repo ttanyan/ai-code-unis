@@ -42,7 +42,17 @@ public class PersonOrganizationWorkflow {
             return new MessagesStateGraph<String>()
                     // 添加人员组织管理节点
                     .addNode("person_org_prompt_enhancer", PersonOrgPromptEnhancerNode.create()) // 提示词增强节点
+
+                    /**
+                     * 工作流的形式应该用 MCP 来实现，而不是用tool
+                     * 1. 尝试将BSS MG抽成MCP后 让AI自主决定怎么同步
+                     * 2. 流程编排.预设几种同步流程后,进行模式选择
+                     */
+
+
+                    //TODO 路由决策是错误的  用 MCP 的核心目标是让 AI 自主决定什么时候使用工具来完成任务
                     .addNode("person_org_router", PersonOrgRouterNode.create()) // 路由决策节点
+
                     .addNode("person_org_management", GetPersonListNode.create()) // 用户列表获取节点（人员组织管理入口）
                     .addNode("get_department_list", GetDepartmentListNode.create()) // 部门列表获取节点
                     .addNode("get_mg_person_list", GetMgPersonListNode.create()) // MG人员列表获取节点
