@@ -25,7 +25,7 @@ import static org.bsc.langgraph4j.StateGraph.START;
 import static org.bsc.langgraph4j.action.AsyncEdgeAction.edge_async;
 
 /**
- * 代码生成工作流（实际可用）
+ * 代码生成工作流
  */
 @Slf4j
 public class CodeGenWorkflow {
@@ -37,12 +37,12 @@ public class CodeGenWorkflow {
         try {
             return new MessagesStateGraph<String>()
                     // 添加节点 - 使用完整实现的节点
-                    .addNode("image_collector", ImageCollectorNode.create())
-                    .addNode("prompt_enhancer", PromptEnhancerNode.create())
-                    .addNode("router", RouterNode.create())
-                    .addNode("code_generator", CodeGeneratorNode.create())
-                    .addNode("code_quality_check", CodeQualityCheckNode.create())
-                    .addNode("project_builder", ProjectBuilderNode.create())
+                    .addNode("image_collector", ImageCollectorNode.create()) // 图像收集节点
+                    .addNode("prompt_enhancer", PromptEnhancerNode.create()) // 提示词增强节点
+                    .addNode("router", RouterNode.create())  // 路由决策节点
+                    .addNode("code_generator", CodeGeneratorNode.create()) // 代码生成节点
+                    .addNode("code_quality_check", CodeQualityCheckNode.create()) // 代码质量检查节点
+                    .addNode("project_builder", ProjectBuilderNode.create())// 项目构建节点
 
                     // 添加边
                     .addEdge(START, "image_collector")
@@ -50,7 +50,7 @@ public class CodeGenWorkflow {
                     .addEdge("prompt_enhancer", "router")
                     .addEdge("router", "code_generator")
                     .addEdge("code_generator", "code_quality_check")
-                    // 新增质检条件边：根据质检结果决定下一步
+                    // 新增条件边：根据质检结果决定下一步
                     .addConditionalEdges("code_quality_check",
                             edge_async(this::routeAfterQualityCheck),
                             Map.of(

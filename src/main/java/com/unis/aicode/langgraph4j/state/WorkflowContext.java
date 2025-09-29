@@ -107,7 +107,7 @@ public class WorkflowContext implements Serializable {
     private List<ImageResource> illustrations;
     private List<ImageResource> diagrams;
     private List<ImageResource> logos;
-    
+    // JAVA 项目
     /**
      * 用户列表
      * 存储从BSS系统获取的用户列表信息
@@ -125,6 +125,8 @@ public class WorkflowContext implements Serializable {
      * 存储从MG系统获取的人员列表信息
      */
     private List<PersonInfo> mgPersonList;
+
+
 
     @Serial
     private static final long serialVersionUID = 1L;

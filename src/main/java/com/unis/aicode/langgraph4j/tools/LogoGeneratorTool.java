@@ -17,10 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Logo 图片生成工具
+ * Logo 图片生成工具 免费额度少
  */
 @Slf4j
 @Component
+
 public class LogoGeneratorTool {
 
     @Value("${dashscope.api-key:}")

@@ -17,12 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 图片搜索工具（根据关键词搜索内容图片）
+ * 图片搜索工具（根据关键词搜索内容图片,风景图片）
  */
 @Slf4j
 @Component
 public class ImageSearchTool {
 
+    //开源的图片搜索API
     private static final String PEXELS_API_URL = "https://api.pexels.com/v1/search";
 
     @Value("${pexels.api-key}")

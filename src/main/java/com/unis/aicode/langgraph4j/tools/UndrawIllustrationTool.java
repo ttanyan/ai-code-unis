@@ -17,15 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 图片收集工具（插画图片）
+ * 图片收集工具（插画图片） //TODO 不可用 。需替换工具
  */
 @Slf4j
 @Component
+@Deprecated
 public class UndrawIllustrationTool {
 
-    private static final String UNDRAW_API_URL = "https://undraw.co/_next/data/mMWmJSt23qpgo8cLTD_pB/search/%s.json?term=%s";
+    private static final String UNDRAW_API_URL = "https://undraw.co/search/happay%s";
 
     @Tool("搜索插画图片，用于网站美化和装饰")
+    @Deprecated
     public List<ImageResource> searchIllustrations(@P("搜索关键词") String query) {
         List<ImageResource> imageList = new ArrayList<>();
         int searchCount = 12;

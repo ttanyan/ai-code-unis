@@ -32,7 +32,7 @@ public class CodeGeneratorNode {
             log.info("开始生成代码，类型: {} ({})", generationType.getValue(), generationType.getText());
             // 先使用固定的 appId (后续再整合到业务中)
             Long appId = 0L;
-            // 调用流式代码生成
+            // 调用流式代码生成 TODO 目录结构在这里生成比较合理.
             Flux<String> codeStream = codeGeneratorFacade.generateAndSaveCodeStream(userMessage, generationType, appId);
             // 同步等待流式输出完成
             codeStream.blockLast(Duration.ofMinutes(10)); // 最多等待 10 分钟

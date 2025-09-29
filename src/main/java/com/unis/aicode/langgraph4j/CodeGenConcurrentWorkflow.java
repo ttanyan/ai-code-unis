@@ -109,7 +109,7 @@ public class CodeGenConcurrentWorkflow {
         log.info("开始执行并发代码生成工作流");
         WorkflowContext finalContext = null;
         int stepCounter = 1;
-        // 配置并发执行
+        // TODO 配置并发执行 需要配置最大
         ExecutorService pool = ExecutorBuilder.create()
                 .setCorePoolSize(10)
                 .setMaxPoolSize(20)
@@ -117,7 +117,7 @@ public class CodeGenConcurrentWorkflow {
                 .setThreadFactory(ThreadFactoryBuilder.create().setNamePrefix("Parallel-Image-Collect").build())
                 .build();
         RunnableConfig runnableConfig = RunnableConfig.builder()
-                .addParallelNodeExecutor("image_plan", pool)
+                .addParallelNodeExecutor("image_plan", pool) //必须指定比ing发开始节点
                 .build();
         for (NodeOutput<MessagesState<String>> step : workflow.stream(
                 Map.of(WorkflowContext.WORKFLOW_CONTEXT_KEY, initialContext),

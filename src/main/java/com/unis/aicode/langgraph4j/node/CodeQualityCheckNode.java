@@ -39,7 +39,7 @@ public class CodeQualityCheckNode {
                             .suggestions(List.of("请确保代码生成成功"))
                             .build();
                 } else {
-                    // 2. 调用 AI 进行代码质量检查
+                    // 2. 调用 AI 进行代码质量检查 TODO JAVA代码可以重新定义或者自己编写
                     CodeQualityCheckService qualityCheckService = SpringContextUtil.getBean(CodeQualityCheckService.class);
                     qualityResult = qualityCheckService.checkCodeQuality(codeContent);
                     log.info("代码质量检查完成 - 是否通过: {}", qualityResult.getIsValid());

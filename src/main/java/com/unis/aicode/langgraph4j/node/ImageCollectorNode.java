@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.bsc.langgraph4j.action.AsyncNodeAction.node_async;
 
 /**
- * 图片收集节点（并发）
+ * 图片收集节点（并发）基于CompletableFuture 进行收集
  */
 @Slf4j
 public class ImageCollectorNode {
@@ -47,14 +47,14 @@ public class ImageCollectorNode {
                                 imageSearchTool.searchContentImages(task.query())));
                     }
                 }
-                // 并发执行插画图片搜索
-                if (plan.getIllustrationTasks() != null) {
-                    UndrawIllustrationTool illustrationTool = SpringContextUtil.getBean(UndrawIllustrationTool.class);
-                    for (ImageCollectionPlan.IllustrationTask task : plan.getIllustrationTasks()) {
-                        futures.add(CompletableFuture.supplyAsync(() ->
-                                illustrationTool.searchIllustrations(task.query())));
-                    }
-                }
+                // 并发执行插画图片搜索 TODO 网站暂不可用
+//                if (plan.getIllustrationTasks() != null) {
+//                    UndrawIllustrationTool illustrationTool = SpringContextUtil.getBean(UndrawIllustrationTool.class);
+//                    for (ImageCollectionPlan.IllustrationTask task : plan.getIllustrationTasks()) {
+//                        futures.add(CompletableFuture.supplyAsync(() ->
+//                                illustrationTool.searchIllustrations(task.query())));
+//                    }
+//                }
                 // 并发执行架构图生成
                 if (plan.getDiagramTasks() != null) {
                     MermaidDiagramTool diagramTool = SpringContextUtil.getBean(MermaidDiagramTool.class);

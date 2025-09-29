@@ -1,4 +1,4 @@
-package com.unis.aicode.langgraph4j;
+package com.unis.aicode.langgraph4j.tools.test;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bsc.langgraph4j.CompiledGraph;

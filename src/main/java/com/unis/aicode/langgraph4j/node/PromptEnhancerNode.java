@@ -29,10 +29,10 @@ public class PromptEnhancerNode {
             // 构建增强后的提示词
             StringBuilder enhancedPromptBuilder = new StringBuilder();
             enhancedPromptBuilder.append(originalPrompt);
-            // 如果有图片资源，则添加图片信息
+            // 如果有图片资源，则添加图片信息 为了兼容以前的逻辑
             if (CollUtil.isNotEmpty(imageList) || StrUtil.isNotBlank(imageListStr)) {
                 enhancedPromptBuilder.append("\n\n## 可用素材资源\n");
-                enhancedPromptBuilder.append("请在生成网站使用以下图片资源，将这些图片合理地嵌入到网站的相应位置中。\n");
+                enhancedPromptBuilder.append("请在生成网站使用以下图片资源，将这些图片合理地嵌入到网站的相应位置中。注意有图片资源的时候务必要合理的将这些图片放到合理的位置\n");
                 if (CollUtil.isNotEmpty(imageList)) {
                     for (ImageResource image : imageList) {
                         enhancedPromptBuilder.append("- ")
