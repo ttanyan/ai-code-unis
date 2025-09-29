@@ -1,13 +1,12 @@
 package com.unis.aicode.langgraph4j;
 
-import com.unis.aicode.BaseTest;
 import com.unis.aicode.langgraph4j.state.WorkflowContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CodeGenConcurrentWorkflowTest extends BaseTest {
+class CodeGenConcurrentWorkflowTest{
 
 
     @Test
