@@ -11,7 +11,7 @@ class WebScreenshotUtilsTest {
 
     @Test
     void saveWebPageScreenshot() {
-        String testUrl = "https://www.codefather.cn";
+        String testUrl = "https://www.baidu.com";
         String webPageScreenshot = WebScreenshotUtils.saveWebPageScreenshot(testUrl);
         Assertions.assertNotNull(webPageScreenshot);
     }

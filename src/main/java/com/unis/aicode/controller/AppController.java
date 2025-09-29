@@ -18,8 +18,6 @@ import com.unis.aicode.model.dto.app.*;
 import com.unis.aicode.model.dto.app.*;
 import com.unis.aicode.model.entity.User;
 import com.unis.aicode.model.vo.AppVO;
-import com.unis.aicode.ratelimter.annotation.RateLimit;
-import com.unis.aicode.ratelimter.enums.RateLimitType;
 import com.unis.aicode.service.ProjectDownloadService;
 import com.unis.aicode.service.UserService;
 import jakarta.annotation.Resource;
@@ -58,7 +56,6 @@ public class AppController {
     private ProjectDownloadService projectDownloadService;
 
     @GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @RateLimit(limitType = RateLimitType.USER, rate = 5, rateInterval = 60, message = "AI 对话请求过于频繁，请稍后再试")
     public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam Long appId,
                                                        @RequestParam String message,
                                                        HttpServletRequest request) {

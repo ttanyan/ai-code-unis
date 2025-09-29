@@ -24,7 +24,6 @@ import static org.bsc.langgraph4j.action.AsyncEdgeAction.edge_async;
 
 /**
  * 并发执行的代码生成工作流
- * 该工作流结合了图像收集
  */
 @Slf4j
 public class CodeGenConcurrentWorkflow {
@@ -109,7 +108,7 @@ public class CodeGenConcurrentWorkflow {
         log.info("开始执行并发代码生成工作流");
         WorkflowContext finalContext = null;
         int stepCounter = 1;
-        // TODO 配置并发执行 需要配置最大
+        // TODO 配置并发执行 需要配置线程池 。默认还是串行执行
         ExecutorService pool = ExecutorBuilder.create()
                 .setCorePoolSize(10)
                 .setMaxPoolSize(20)
