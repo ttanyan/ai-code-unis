@@ -4,7 +4,6 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.unis.aicode.ai.guardrail.PromptSafetyInputGuardrail;
 import com.unis.aicode.ai.tools.ToolManager;
-import com.unis.aicode.ai.tools.*;
 import com.unis.aicode.exception.BusinessException;
 import com.unis.aicode.exception.ErrorCode;
 import com.unis.aicode.model.enums.CodeGenTypeEnum;
@@ -107,7 +106,7 @@ public class AiCodeGeneratorServiceFactory {
                         .chatModel(chatModel)
                         .streamingChatModel(reasoningStreamingChatModel)
                         .chatMemoryProvider(memoryId -> chatMemory)
-                        .tools(toolManager.getAllTools())
+                        .tools(toolManager.getToolsByCodeType(codeGenType))
                         // 处理工具调用幻觉问题
                         .hallucinatedToolNameStrategy(toolExecutionRequest ->
                                 ToolExecutionResultMessage.from(toolExecutionRequest,

@@ -15,7 +15,7 @@ import com.unis.aicode.core.parser.CodeParserExecutor;
 import com.unis.aicode.core.saver.CodeFileSaverExecutor;
 import com.unis.aicode.exception.BusinessException;
 import com.unis.aicode.exception.ErrorCode;
-import com.unis.aicode.langgraph4j.PersonOrganizationWorkflow;
+//import com.unis.aicode.langgraph4j.PersonOrganizationWorkflow;
 import com.unis.aicode.langgraph4j.state.WorkflowContext;
 import com.unis.aicode.model.enums.CodeGenTypeEnum;
 import dev.langchain4j.model.chat.response.ChatResponse;
@@ -107,8 +107,8 @@ public class AiCodeGeneratorFacade {
                 yield processTokenStream(tokenStream, appId, codeGenTypeEnum);
             }
             case JAVA_PROJECT -> {
-                //TODO 才用工作流
-                WorkflowContext workflowContext = new PersonOrganizationWorkflow().executeWorkflow(userMessage);
+                //TODO JAVA才用工作流
+//                WorkflowContext workflowContext = new PersonOrganizationWorkflow().executeWorkflow(userMessage);
 
                 TokenStream codeStream = aiCodeGeneratorService.generateJavaProjectCodeStream(appId,userMessage);
                 yield processTokenStream(codeStream, appId, codeGenTypeEnum);

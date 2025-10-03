@@ -1,5 +1,7 @@
 package com.unis.aicode.ai.tools;
 
+import com.unis.aicode.ai.tools.javatools.JavaTool;
+import com.unis.aicode.model.enums.CodeGenTypeEnum;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class ToolManager {
     @Resource
     private BaseTool[] tools;
 
+    @Resource
+    private JavaTool[] javaTools;
+
     /**
      * 初始化工具映射
      */
@@ -35,6 +40,10 @@ public class ToolManager {
         for (BaseTool tool : tools) {
             toolMap.put(tool.getToolName(), tool);
             log.info("注册工具: {} -> {}", tool.getToolName(), tool.getDisplayName());
+        }
+        for (BaseTool tool : javaTools) {
+            toolMap.put(tool.getToolName(), tool);
+            log.info("注册Java工具: {} -> {}", tool.getToolName(), tool.getDisplayName());
         }
         log.info("工具管理器初始化完成，共注册 {} 个工具", toolMap.size());
     }
@@ -57,5 +66,22 @@ public class ToolManager {
      */
     public BaseTool[] getAllTools() {
         return tools;
+    }
+    
+    /**
+     * 根据代码生成类型获取相应的工具集合
+     * 
+     * @param typeEnum 代码生成类型
+     * @return 工具实例集合
+     */
+    public BaseTool[] getToolsByCodeType(CodeGenTypeEnum typeEnum) {
+        switch (typeEnum) {
+            case CodeGenTypeEnum.VUE_PROJECT:
+                return tools;
+            case CodeGenTypeEnum.JAVA_PROJECT:
+                return javaTools;
+            default:
+                return getAllTools();
+        }
     }
 }
