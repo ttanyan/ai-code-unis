@@ -4,9 +4,13 @@ import com.unis.aicode.ai.tools.BaseTool;
 
 /**
  * @author Tan Lianwang
- * @title: JavaTool
+ * @title: JavaTool 组织和人员信息同步必须继承
  * @date 2025/9/30 16:06
  */
+
 public abstract class JavaTool  extends BaseTool {
-        //TODO 抽象java的工具放在这里
+
+    private static final String TOOL_NAME = "JavaTool";
+
+
 }
